@@ -9,6 +9,7 @@ public interface ICommunitiesRepository
     Task DeleteAsync(Community community);
     Task UpdateAsync(int id, CommunityDTO community);
     Task<Community> GetByIdAsync(int id);
-    Task<List<CommunityParticipant>> GetAllParticipantsAsync(int id);
-    Task<CommunityParticipant> GetAdminAsync(int id);
+    Task<List<Community>> GetUserCommunitiesAsync(string userId);
+    Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id);
+    Task<CommunityParticipant> GetAdminByCommunityIdAsync(int id);
 }
