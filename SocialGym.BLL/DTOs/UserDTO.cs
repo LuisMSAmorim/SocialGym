@@ -1,6 +1,7 @@
-﻿namespace SocialGym.BLL.Models;
+﻿
+namespace SocialGym.BLL.DTOs;
 
-public sealed class UserDetails 
+public sealed class UserDTO 
 {
     public string UserName { get; set; }
 

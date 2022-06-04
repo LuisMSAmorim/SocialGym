@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
 using SocialGym.BLL.Models;
@@ -22,10 +23,10 @@ public sealed class UsersRepository : IUsersRepository
         _userManager = userManager;
     }
 
-    public async Task<IdentityResult> AddAsync(UserDetails userDetails)
+    public async Task<IdentityResult> AddAsync(UserDTO userDTO)
     {
-        User user = new() { UserName = userDetails.UserName, Email = userDetails.Email };
-        return await _userManager.CreateAsync(user, userDetails.Password);
+        User user = new() { UserName = userDTO.UserName, Email = userDTO.Email };
+        return await _userManager.CreateAsync(user, userDTO.Password);
     }
 
     public async Task DeleteAsync(User user)
@@ -33,7 +34,7 @@ public sealed class UsersRepository : IUsersRepository
         await _userManager.DeleteAsync(user);
     }
 
-    public async Task<User> FindByNameAsync(string name)
+    public async Task<User> GetByNameAsync(string name)
     {
         return await _userManager.FindByNameAsync(name);
     }

@@ -18,9 +18,24 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
         _context = context;
     }
 
-    public async Task AddAsync(Community community)
+    public async Task AddAsync(User user, Community community)
     {
+        List<CommunityParticipant> admin = new()
+        {
+            new CommunityParticipant()
+            {
+                CommunityId = community.CommunityId,
+                Community = community,
+                UserId = user.Id,
+                User = user,
+                IsAdmin = true
+            }
+        };
+
+        community.Participants = admin;
+
         _context.Add(community);
+
         await _context.SaveChangesAsync();
     }
 
@@ -58,11 +73,32 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
         return await _context.Community.FirstOrDefaultAsync(x => x.CommunityId == id);
     }
 
+    public async Task<Community> GetByNameAsync(string name)
+    {
+        return await _context.Community.FirstOrDefaultAsync(x => x.Name == name);
+    }
+
     public async Task UpdateAsync(int id, CommunityDTO communityData)
     {
         var community = await _context.Community.SingleOrDefaultAsync(x => x.CommunityId == id);
 
         _context.Entry(community).CurrentValues.SetValues(communityData);
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AddParticipantAsync(User user, Community community)
+    {
+        CommunityParticipant participant = new()
+        {
+            CommunityId = community.CommunityId,
+            Community = community,
+            UserId = user.Id,
+            User = user,
+            IsAdmin = false
+        };
+
+        _context.CommunityParticipant.Add(participant);
 
         await _context.SaveChangesAsync();
     }

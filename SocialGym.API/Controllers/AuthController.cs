@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
 
     private async Task<User> ValidateUser(LoginCredentials credentials)
     {
-        var user = await usersRepository.FindByNameAsync(credentials.Username);
+        var user = await usersRepository.GetByNameAsync(credentials.Username);
         if (user != null)
         {
             var result = userManager.PasswordHasher

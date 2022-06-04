@@ -15,7 +15,7 @@ public class ProfilesController : ControllerBase
 
     public ProfilesController
     (
-        IUsersRepository usersRepository,
+        IUsersRepository usersRepository
     )
     {
         _usersRepository = usersRepository;
@@ -25,7 +25,7 @@ public class ProfilesController : ControllerBase
     [HttpGet("{userName}")]
     public async Task<ActionResult<UserProfile>> GetProfile(string userName)
     {
-        var user = await _usersRepository.FindByNameAsync(userName);
+        var user = await _usersRepository.GetByNameAsync(userName);
 
         if (user == null)
         {
@@ -47,7 +47,7 @@ public class ProfilesController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateAccount(string userName, UserProfile profile)
     {
-        var user = await _usersRepository.FindByNameAsync(userName);
+        var user = await _usersRepository.GetByNameAsync(userName);
 
         if (user == null)
         {

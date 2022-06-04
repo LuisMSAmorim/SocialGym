@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Interfaces;
 using SocialGym.BLL.Models;
 
@@ -23,7 +24,7 @@ public class AccountsController : ControllerBase
 
     // POST: api/accounts
     [HttpPost]
-    public async Task<IActionResult> Register([FromBody] UserDetails userDetails)
+    public async Task<IActionResult> CreateUser([FromBody] UserDTO userDetails)
     {
         if (!ModelState.IsValid || userDetails == null)
         {
@@ -51,7 +52,7 @@ public class AccountsController : ControllerBase
     [Authorize]
     public async Task<ActionResult<UserAccount>> GetUser(string userName)
     {
-        var user = await _usersRepository.FindByNameAsync(userName);
+        var user = await _usersRepository.GetByNameAsync(userName);
 
         if (user == null)
         {
@@ -78,7 +79,7 @@ public class AccountsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> DeleteUser(string userName)
     {
-        var user = await _usersRepository.FindByNameAsync(userName);
+        var user = await _usersRepository.GetByNameAsync(userName);
 
         if (user == null)
         {
