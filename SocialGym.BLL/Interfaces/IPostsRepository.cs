@@ -7,5 +7,5 @@ public interface IPostsRepository
     Task AddAsync(Post post);
     Task DeleteAsync(Post post);
     Task<Post> GetByIdAsync(int id);
-    Task<List<Post>> GetAllByCommunity(int communityId);
+    Task<List<Post>> GetAllByCommunityId(int communityId);
 }
