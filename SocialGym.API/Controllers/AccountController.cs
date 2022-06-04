@@ -7,11 +7,11 @@ namespace SocialGym.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase
+public class AccountController : ControllerBase
 {
     private readonly IUsersRepository _usersRepository;
 
-    public UserController
+    public AccountController
     (
         IUsersRepository usersRepository
     )
@@ -19,7 +19,7 @@ public class UserController : ControllerBase
         _usersRepository = usersRepository;
     }
 
-    // GET: api/users/string
+    // GET: api/accounts/string
     [HttpGet("{userName}")]
     [Authorize]
     public async Task<ActionResult<UserAccount>> GetUser(string userName)
@@ -43,13 +43,10 @@ public class UserController : ControllerBase
             Email = user.Email,
             UserName = user.UserName,
             Avatar = user.Avatar,
-            BackSquatPR = user.BackSquatPR,
-            BenchPressPR = user.BenchPressPR,
-            DeadLiftPR = user.DeadLiftPR,
         };
     }
 
-    // DELETE: api/users/string
+    // DELETE: api/accounts/string
     [HttpDelete("{userName}")]
     [Authorize]
     public async Task<IActionResult> DeleteUser(string userName)

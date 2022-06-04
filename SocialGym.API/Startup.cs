@@ -73,6 +73,7 @@ public sealed class Startup
     private static void DependencyInjectionServices(IServiceCollection services)
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<ICommunitiesRepository, CommunitiesRepository>();
     }
 
     public void ConfigureSwagger(IServiceCollection services)

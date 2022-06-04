@@ -43,22 +43,6 @@ public sealed class UsersRepository : IUsersRepository
         return await _context.User.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<UserProfile> GetUserProfileAsync(string id)
-    {
-        var user = await _context.User.SingleOrDefaultAsync(x => x.Id == id);
-
-        UserProfile profile = new()
-        { 
-            UserName = user.UserName,
-            Avatar = user.Avatar,
-            BackSquatPR = user.BackSquatPR,
-            BenchPressPR = user.BenchPressPR,
-            DeadLiftPR = user.DeadLiftPR
-        };
-
-        return profile;
-    }
-
     public async Task UpdateProfileAsync(string id, UserProfile profile)
     {
         var user = await _context.User.SingleOrDefaultAsync(x => x.Id == id);

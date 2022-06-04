@@ -39,11 +39,10 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
 
     public async Task<List<Community>> GetUserCommunitiesAsync(string userId)
     {
-        return await _context.Community
-            .SelectMany(x => x.Participants)
+        return await _context.CommunityParticipant
             .Where(x => x.UserId == userId)
-            .OfType<Community>()
-            .ToListAsync();            
+            .Select(x => x.Community)
+            .ToListAsync();
     }
 
     public async Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id)

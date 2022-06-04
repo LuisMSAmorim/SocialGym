@@ -2,7 +2,7 @@
 
 namespace SocialGym.BLL.Models;
 
-public class UserProfile
+public sealed class UserProfile
 {
     public string UserName { get; set; }
     public string Avatar { get; set; }

@@ -11,5 +11,4 @@ public interface IUsersRepository
     Task UpdateProfileAsync(string id, UserProfile profile);
     Task<User> GetByIdAsync(string id);
     Task<User> FindByNameAsync(string name);
-    Task<UserProfile> GetUserProfileAsync(string userId);
 }
