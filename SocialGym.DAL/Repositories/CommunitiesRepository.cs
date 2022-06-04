@@ -45,26 +45,11 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<CommunityParticipant> GetAdminByCommunityIdAsync(int id)
-    {
-        return await _context.CommunityParticipant
-            .Where(x => x.CommunityId == id)
-            .FirstOrDefaultAsync(x => x.IsAdmin == true);
-    }
-
     public async Task<List<Community>> GetUserCommunitiesAsync(string userId)
     {
         return await _context.CommunityParticipant
             .Where(x => x.UserId == userId)
             .Select(x => x.Community)
-            .ToListAsync();
-    }
-
-    public async Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id)
-    {
-        return await _context.CommunityParticipant
-            .Where(x => x.CommunityId == id)
-            .Include(x => x.Community)
             .ToListAsync();
     }
 
