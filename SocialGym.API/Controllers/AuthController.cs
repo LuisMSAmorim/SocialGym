@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SocialGym.API.Config;
+using SocialGym.BLL.Entities;
+using SocialGym.BLL.Interfaces;
 using SocialGym.BLL.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,15 +18,18 @@ namespace SocialGym.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly JwtBearerTokenSettings jwtBearerTokenSettings;
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly IUsersRepository usersRepository;
+    private readonly UserManager<User> userManager;
 
     public AuthController
     (
         IOptions<JwtBearerTokenSettings> jwtTokenOptions,
-        UserManager<IdentityUser> userManager
+        IUsersRepository usersRepository,
+        UserManager<User> userManager
     )
     {
         this.jwtBearerTokenSettings = jwtTokenOptions.Value;
+        this.usersRepository = usersRepository;
         this.userManager = userManager;
     }
 
@@ -37,8 +42,7 @@ public class AuthController : ControllerBase
             return new BadRequestObjectResult(new { Message = "User Registration Failed" });
         }
 
-        IdentityUser identityUser = new() { UserName = userDetails.UserName, Email = userDetails.Email };
-        IdentityResult result = await userManager.CreateAsync(identityUser, userDetails.Password);
+        var result = await usersRepository.AddAsync(userDetails);
 
         if (!result.Succeeded)
         {
@@ -58,34 +62,34 @@ public class AuthController : ControllerBase
     [Route("Login")]
     public async Task<IActionResult> Login([FromBody] LoginCredentials credentials)
     {
-        IdentityUser identityUser;
+        User user;
 
         if (!ModelState.IsValid
             || credentials == null
-            || (identityUser = await ValidateUser(credentials)) == null)
+            || (user = await ValidateUser(credentials)) == null)
         {
             return new BadRequestObjectResult(new { Message = "Login failed" });
         }
 
-        var token = GenerateToken(identityUser);
+        var token = GenerateToken(user);
         return Ok(new { Token = token, Message = "Success" });
     }
 
-    private async Task<IdentityUser> ValidateUser(LoginCredentials credentials)
+    private async Task<User> ValidateUser(LoginCredentials credentials)
     {
-        var identityUser = await userManager.FindByNameAsync(credentials.Username);
-        if (identityUser != null)
+        var user = await usersRepository.FindByNameAsync(credentials.Username);
+        if (user != null)
         {
             var result = userManager.PasswordHasher
-                .VerifyHashedPassword(identityUser, identityUser.PasswordHash, credentials.Password);
+                .VerifyHashedPassword(user, user.PasswordHash, credentials.Password);
 
-            return result == PasswordVerificationResult.Failed ? null : identityUser;
+            return result == PasswordVerificationResult.Failed ? null : user;
         }
 
         return null;
     }
 
-    private object GenerateToken(IdentityUser identityUser)
+    private object GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(jwtBearerTokenSettings.SecretKey);
@@ -94,8 +98,8 @@ public class AuthController : ControllerBase
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                    new Claim(ClaimTypes.Name, identityUser.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, identityUser.Email)
+                    new Claim(ClaimTypes.Name, user.UserName.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email)
             }),
 
             Expires = DateTime.UtcNow.AddSeconds(jwtBearerTokenSettings.ExpiryTimeInSeconds),

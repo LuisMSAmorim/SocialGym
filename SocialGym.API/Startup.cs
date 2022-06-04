@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialGym.API.Config;
 using SocialGym.BLL.Entities;
+using SocialGym.BLL.Interfaces;
 using SocialGym.DAL.Context;
+using SocialGym.DAL.Repositories;
 using System.Text;
 
 namespace SocialGym.API;
@@ -61,5 +63,12 @@ public sealed class Startup
                 ClockSkew = TimeSpan.Zero
             };
         });
+
+        DependencyInjectionServices(services);
+    }
+
+    private static void DependencyInjectionServices(IServiceCollection services)
+    {
+        services.AddScoped<IUsersRepository, UsersRepository>();
     }
 }

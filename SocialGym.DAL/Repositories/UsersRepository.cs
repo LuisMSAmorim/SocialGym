@@ -30,8 +30,12 @@ public sealed class UsersRepository : IUsersRepository
 
     public async Task DeleteAsync(User user)
     {
-        _context.Remove(user);
-        await _context.SaveChangesAsync();
+        await _userManager.DeleteAsync(user);
+    }
+
+    public async Task<User> FindByNameAsync(string name)
+    {
+        return await _userManager.FindByNameAsync(name);
     }
 
     public async Task<User> GetByIdAsync(string id)
