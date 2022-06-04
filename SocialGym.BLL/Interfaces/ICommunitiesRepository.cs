@@ -8,6 +8,7 @@ public interface ICommunitiesRepository
     Task AddAsync(User user, Community community);
 
     Task AddParticipantAsync(User user, Community community);
+    Task<List<Community>> GetAllAsync();
     Task DeleteAsync(Community community);
     Task UpdateAsync(int id, CommunityDTO community);
     Task<Community> GetByIdAsync(int id);

@@ -70,12 +70,16 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
 
     public async Task<Community> GetByIdAsync(int id)
     {
-        return await _context.Community.FirstOrDefaultAsync(x => x.CommunityId == id);
+        return await _context.Community
+            .Include(x => x.Participants)
+            .FirstOrDefaultAsync(x => x.CommunityId == id);
     }
 
     public async Task<Community> GetByNameAsync(string name)
     {
-        return await _context.Community.FirstOrDefaultAsync(x => x.Name == name);
+        return await _context.Community
+            .Include(x => x.Participants)
+            .FirstOrDefaultAsync(x => x.Name == name);
     }
 
     public async Task UpdateAsync(int id, CommunityDTO communityData)
@@ -101,5 +105,12 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
         _context.CommunityParticipant.Add(participant);
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Community>> GetAllAsync()
+    {
+        return await _context.Community
+            .Include(x => x.Participants)
+            .ToListAsync();
     }
 }
