@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
+using SocialGym.BLL.Models;
 
 namespace SocialGym.API.Controllers;
 
@@ -19,46 +19,54 @@ public class UserController : ControllerBase
         _usersRepository = usersRepository;
     }
 
-    // GET: api/users/5
-    [HttpGet("{id}")]
+    // GET: api/users/string
+    [HttpGet("{userName}")]
     [Authorize]
-    public async Task<ActionResult<User>> GetUser(string id)
+    public async Task<ActionResult<UserAccount>> GetUser(string userName)
     {
-        var user = await _usersRepository.GetByIdAsync(id);
+        var user = await _usersRepository.FindByNameAsync(userName);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
 
         var claims = User.Claims.FirstOrDefault(); 
 
         if (claims.Subject.Name != user.UserName)
         {
-            return BadRequest();
+            return Unauthorized();
         };
+
+        return new UserAccount()
+        {
+            Email = user.Email,
+            UserName = user.UserName,
+            Avatar = user.Avatar,
+            BackSquatPR = user.BackSquatPR,
+            BenchPressPR = user.BenchPressPR,
+            DeadLiftPR = user.DeadLiftPR,
+        };
+    }
+
+    // DELETE: api/users/string
+    [HttpDelete("{userName}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteUser(string userName)
+    {
+        var user = await _usersRepository.FindByNameAsync(userName);
 
         if (user == null)
         {
             return NotFound();
         }
-
-        return user;
-    }
-
-    // DELETE: api/users/5
-    [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<IActionResult> DeleteUser(string id)
-    {
-        var user = await _usersRepository.GetByIdAsync(id);
 
         var claims = User.Claims.FirstOrDefault();
 
         if (claims.Subject.Name != user.UserName)
         {
-            return BadRequest();
+            return Unauthorized();
         };
-
-        if (user == null)
-        {
-            return NotFound();
-        }
 
         await _usersRepository.DeleteAsync(user);
 

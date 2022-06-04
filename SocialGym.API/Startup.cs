@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SocialGym.API.Config;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
@@ -65,10 +66,43 @@ public sealed class Startup
         });
 
         DependencyInjectionServices(services);
+
+        ConfigureSwagger(services);
     }
 
     private static void DependencyInjectionServices(IServiceCollection services)
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
+    }
+
+    public void ConfigureSwagger(IServiceCollection services)
+    {
+        services.AddSwaggerGen(x =>
+        {
+            x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header (Type 'Bearer' + your token)"
+            });
+
+            x.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id  = "Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+            });
+        });
     }
 }

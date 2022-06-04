@@ -28,11 +28,10 @@ namespace SocialGym.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BenchPressPR = table.Column<int>(type: "int", nullable: true),
-                    BackSquatPR = table.Column<int>(type: "int", nullable: true),
-                    DeadLiftPR = table.Column<int>(type: "int", nullable: true),
+                    BenchPressPR = table.Column<int>(type: "int", nullable: false),
+                    BackSquatPR = table.Column<int>(type: "int", nullable: false),
+                    DeadLiftPR = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
