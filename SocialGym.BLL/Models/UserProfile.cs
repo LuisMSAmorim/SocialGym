@@ -1,4 +1,6 @@
-﻿namespace SocialGym.BLL.Models;
+﻿using SocialGym.BLL.Entities;
+
+namespace SocialGym.BLL.Models;
 
 public class UserProfile
 {
@@ -7,4 +9,5 @@ public class UserProfile
     public int BenchPressPR { get; set; }
     public int BackSquatPR { get; set; }
     public int DeadLiftPR { get; set; }
+    public IEnumerable<Community> Communities { get; set; }
 }
