@@ -1,9 +1,8 @@
-﻿namespace SocialGym.BLL.Entities;
+﻿namespace SocialGym.BLL.DTOs;
 
-public sealed class PersonalRecords
+public sealed class PersonalRecordsDTO
 {
     public int BenchPressPR { get; set; }
     public int BackSquatPR { get; set; }
     public int DeadLiftPR { get; set; }
-    public User User { get; set; }
 }

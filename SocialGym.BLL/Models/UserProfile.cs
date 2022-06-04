@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace SocialGym.BLL.Models;
 
-namespace SocialGym.BLL.Entities;
-
-public sealed class User : IdentityUser
+public sealed class UserProfile
 {
+    public string UserName { get; set; }
     public string Avatar { get; set; }
     public int BenchPressPR { get; set; }
     public int BackSquatPR { get; set; }

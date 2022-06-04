@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialGym.API.Config;
+using SocialGym.BLL.Entities;
 using SocialGym.DAL.Context;
 using System.Text;
 
@@ -27,7 +28,7 @@ public sealed class Startup
         services.AddDbContext<SocialGymDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
 
-        services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        services.AddIdentity<User, IdentityRole>(options =>
             options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<SocialGymDbContext>();
 
