@@ -10,10 +10,12 @@ public class CommunitiesController : ControllerBase
     private readonly ICommunitiesRepository _communitiesRepository;
 
     public CommunitiesController
-   (
-       ICommunitiesRepository communitiesRepository
-   )
+    (
+        ICommunitiesRepository communitiesRepository
+    )
     {
         _communitiesRepository = communitiesRepository;
     }
+
+
 }

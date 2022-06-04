@@ -12,16 +12,13 @@ namespace SocialGym.API.Controllers;
 public class ProfilesController : ControllerBase
 {
     private readonly IUsersRepository _usersRepository;
-    private readonly ICommunitiesRepository _communitiesRepository;
 
     public ProfilesController
     (
         IUsersRepository usersRepository,
-        ICommunitiesRepository communitiesRepository
     )
     {
         _usersRepository = usersRepository;
-        _communitiesRepository = communitiesRepository;
     }
 
     // GET: api/profiles/string
