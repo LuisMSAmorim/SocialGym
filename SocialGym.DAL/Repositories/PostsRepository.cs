@@ -29,7 +29,7 @@ public sealed class PostsRepository : IPostsRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Post>> GetAllByCommunityId(int communityId)
+    public async Task<List<Post>> GetAllByCommunityIdAsync(int communityId)
     {
         return await _context.Post
             .Where(x => x.CommunityParticipant.CommunityId == communityId)
