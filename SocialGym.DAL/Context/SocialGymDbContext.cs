@@ -5,7 +5,7 @@ using SocialGym.BLL.Entities;
 
 namespace SocialGym.DAL.Context;
 
-public class SocialGymDbContext : IdentityDbContext<IdentityUser>
+public class SocialGymDbContext : IdentityDbContext<User>
 {
     public SocialGymDbContext(DbContextOptions<SocialGymDbContext> options) : base(options) { }
 
