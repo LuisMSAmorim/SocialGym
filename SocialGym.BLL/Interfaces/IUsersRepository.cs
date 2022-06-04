@@ -8,7 +8,7 @@ public interface IUsersRepository
 {
     Task<IdentityResult> AddAsync(UserDetails userDetails);
     Task DeleteAsync(User user);
-    Task UpdateProfileAsync(string id, UserProfile profile);
+    Task<IdentityResult> UpdateProfileAsync(string id, UserProfile profile);
     Task<User> GetByIdAsync(string id);
     Task<User> FindByNameAsync(string name);
 }

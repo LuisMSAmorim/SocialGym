@@ -9,5 +9,4 @@ public sealed class UserProfile
     public int BenchPressPR { get; set; }
     public int BackSquatPR { get; set; }
     public int DeadLiftPR { get; set; }
-    public IEnumerable<Community> Communities { get; set; }
 }

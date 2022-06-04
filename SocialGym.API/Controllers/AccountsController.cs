@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SocialGym.BLL.Interfaces;
 using SocialGym.BLL.Models;
 
@@ -7,16 +9,41 @@ namespace SocialGym.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase
+public class AccountsController : ControllerBase
 {
     private readonly IUsersRepository _usersRepository;
 
-    public AccountController
+    public AccountsController
     (
         IUsersRepository usersRepository
     )
     {
         _usersRepository = usersRepository;
+    }
+
+    // POST: api/accounts
+    [HttpPost]
+    public async Task<IActionResult> Register([FromBody] UserDetails userDetails)
+    {
+        if (!ModelState.IsValid || userDetails == null)
+        {
+            return new BadRequestObjectResult(new { Message = "User Registration Failed" });
+        }
+
+        var result = await _usersRepository.AddAsync(userDetails);
+
+        if (!result.Succeeded)
+        {
+            var dictionary = new ModelStateDictionary();
+            foreach (IdentityError error in result.Errors)
+            {
+                dictionary.AddModelError(error.Code, error.Description);
+            }
+
+            return new BadRequestObjectResult(new { Message = "User Registration Failed", Errors = dictionary });
+        }
+
+        return Ok(new { Message = "User Registration Successful" });
     }
 
     // GET: api/accounts/string

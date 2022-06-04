@@ -34,31 +34,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    [Route("Register")]
-    public async Task<IActionResult> Register([FromBody] UserDetails userDetails)
-    {
-        if (!ModelState.IsValid || userDetails == null)
-        {
-            return new BadRequestObjectResult(new { Message = "User Registration Failed" });
-        }
-
-        var result = await usersRepository.AddAsync(userDetails);
-
-        if (!result.Succeeded)
-        {
-            var dictionary = new ModelStateDictionary();
-            foreach (IdentityError error in result.Errors)
-            {
-                dictionary.AddModelError(error.Code, error.Description);
-            }
-
-            return new BadRequestObjectResult(new { Message = "User Registration Failed", Errors = dictionary });
-        }
-
-        return Ok(new { Message = "User Registration Successful" });
-    }
-
-    [HttpPost]
     [Route("Login")]
     public async Task<IActionResult> Login([FromBody] LoginCredentials credentials)
     {
