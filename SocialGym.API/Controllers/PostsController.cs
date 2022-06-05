@@ -95,7 +95,8 @@ public class PostsController : ControllerBase
         return posts
             .Select(x => new PostViewModel()
             {
-                CommunityParticipantId = x.CommunityParticipantId,
+                CommunityParticipantUserName = x.CommunityParticipant.User.UserName,
+                CommunityParticipantAvatar = x.CommunityParticipant.User.Avatar,
                 CreatedAt = x.CreatedAt,
                 ImageUrl = x.ImageUrl,
                 PostId = x.PostId,
@@ -137,7 +138,8 @@ public class PostsController : ControllerBase
 
         return new PostViewModel()
         {
-            CommunityParticipantId = post.CommunityParticipantId,
+            CommunityParticipantUserName = post.CommunityParticipant.User.UserName,
+            CommunityParticipantAvatar = post.CommunityParticipant.User.Avatar,
             CreatedAt = post.CreatedAt,
             ImageUrl = post.ImageUrl,
             PostId = post.PostId,

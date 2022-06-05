@@ -7,7 +7,7 @@
 <h1>Comunidades</h1>
 
 <p>
-    <a asp-action="Create">Criar uma comunidade</a>
+    <a class="btn btn-primary mt-2" asp-action="Create">Criar uma comunidade</a>
 </p>
 
 @if(ViewBag.ErrorMessage != null)
@@ -40,9 +40,10 @@ else
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { id = item.CommunityId }) |
-                @Html.ActionLink("Ver Membros", "Members", new { id = item.CommunityId  }) |
-                @Html.ActionLink("Ingressar", "Ingress", new { id = item.CommunityId })
+                @Html.ActionLink("Visualizar Posts", "Posts", new { id = item.CommunityId },  new { @class="btn btn-primary" }) |
+                @Html.ActionLink("Visualizar Participantes", "Participants", new { id = item.CommunityId  },  new { @class="btn btn-warning" })  |
+                @Html.ActionLink("Visualizar Admin", "Admin", new { id = item.CommunityId  }, new { @class="btn btn-success" }) |
+                @Html.ActionLink("Ingressar", "Ingress", new { id = item.CommunityId },  new { @class="btn btn-info" })
             </td>
         </tr>
 }

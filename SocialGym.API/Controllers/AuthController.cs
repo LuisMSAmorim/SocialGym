@@ -74,7 +74,6 @@ public class AuthController : ControllerBase
             Subject = new ClaimsIdentity(new Claim[]
             {
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email)
             }),
 
             Expires = DateTime.UtcNow.AddSeconds(jwtBearerTokenSettings.ExpiryTimeInSeconds),

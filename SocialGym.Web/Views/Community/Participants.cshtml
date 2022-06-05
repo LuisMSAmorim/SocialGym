@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SocialGym.BLL.ViewModels.UserProfileViewModel>
+
+@{
+    ViewData["Title"] = "Participants";
+}
+
+<h1>Participants</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Avatar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BenchPressPR)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BackSquatPR)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeadLiftPR)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                <img style="width: 5rem; height: 5rem; border-radius: 50%;" class="card-img-top" src="@Html.DisplayFor(modelItem => item.Avatar)" alt="Avatar" >
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BenchPressPR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BackSquatPR)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeadLiftPR)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

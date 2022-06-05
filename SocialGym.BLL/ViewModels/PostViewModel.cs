@@ -7,5 +7,6 @@ public sealed class PostViewModel
     public string Text { get; set; }
     public string ImageUrl { get; set; }
     public DateTime CreatedAt { get; set; }
-    public int CommunityParticipantId { get; set; }
+    public string CommunityParticipantUserName { get; set; }
+    public string CommunityParticipantAvatar { get; set; }
 }

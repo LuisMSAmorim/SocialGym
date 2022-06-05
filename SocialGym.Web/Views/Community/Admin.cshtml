@@ -1,0 +1,44 @@
+﻿@model SocialGym.BLL.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin</h1>
+
+<div class="container">
+    <div class="row marcador align-items-center">
+        <div class="col mx-auto text-center">
+            <img style="width: 10rem; height: 10rem; border-radius: 50%;" class="card-img-top" src="@Model.Avatar" alt="@ViewBag.UserName" >
+             <h1 style="font-size: 4rem;">@ViewBag.UserName</h1>
+            @if(Context.Request.Cookies["username"] == ViewBag.UserName)
+            {
+                <a href="/profile/edit/@Model.UserName" class="btn btn-primary">Editar perfil</a>
+            }
+        </div>
+    </div>
+
+</div>
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.BenchPressPR)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.BenchPressPR)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.BackSquatPR)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.BackSquatPR)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DeadLiftPR)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DeadLiftPR)
+            </dd>
+        </dl>
+    </div>

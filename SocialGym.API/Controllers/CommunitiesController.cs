@@ -107,23 +107,39 @@ public class CommunitiesController : ControllerBase
             return NotFound();
         }
 
-        List<UserProfileViewModel> participantsProfile = new();
-
-        participants.ForEach(x =>
+        return participants.Select(x => new UserProfileViewModel()
         {
-            UserProfileViewModel participantProfile = new()
-            {
-                UserName = x.User.UserName,
-                Avatar = x.User.Avatar,
-                BackSquatPR = x.User.BackSquatPR,
-                BenchPressPR = x.User.BenchPressPR,
-                DeadLiftPR = x.User.DeadLiftPR
-            };
+            UserName = x.User.UserName,
+            Avatar = x.User.Avatar,
+            BackSquatPR = x.User.BackSquatPR,
+            BenchPressPR = x.User.BenchPressPR,
+            DeadLiftPR = x.User.DeadLiftPR
+        }).ToList();
+    }
 
-            participantsProfile.Add(participantProfile);
-        });
+    // GET: api/communities/admin/id
+    [HttpGet]
+    [Route("admin/{id}")]
+    [Authorize]
+    public async Task<ActionResult<UserProfileViewModel>> GetCommunityAdmin(int id)
+    {
+        var community = await _communitiesRepository.GetByIdAsync(id);
 
-        return participantsProfile;
+        if (community == null)
+        {
+            return NotFound();
+        }
+
+        var communityAdmin = await _communitiesRepository.GetAdminByCommunityIdAsync(id);
+
+        return new UserProfileViewModel()
+        {
+            Avatar = communityAdmin.User.Avatar,
+            UserName = communityAdmin.User.UserName,
+            BackSquatPR = communityAdmin.User.BackSquatPR,
+            BenchPressPR = communityAdmin.User.BenchPressPR,
+            DeadLiftPR = communityAdmin.User.DeadLiftPR
+        };
     }
 
     // GET: api/communities/5

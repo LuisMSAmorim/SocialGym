@@ -46,6 +46,7 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
     {
         return await _context.CommunityParticipant
             .Where(x => x.CommunityId == id)
+            .Include(x => x.User)
             .FirstOrDefaultAsync(x => x.IsAdmin == true);
     }
 
