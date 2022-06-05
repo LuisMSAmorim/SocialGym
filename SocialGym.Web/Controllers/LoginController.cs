@@ -28,13 +28,14 @@ public class LoginController : Controller
 
         string apiResponse = await response.Content.ReadAsStringAsync();
 
-        LoginResponseViewModel receivedToken = JsonConvert.DeserializeObject<LoginResponseViewModel>(apiResponse);
+        LoginResponseViewModel loginResponse = JsonConvert.DeserializeObject<LoginResponseViewModel>(apiResponse);
 
-        if (receivedToken.Token != null)
+        if (loginResponse.Token != null)
         {
             CookieOptions option = new();
             option.Expires = DateTime.Now.AddMinutes(60);
-            Response.Cookies.Append("token", receivedToken.Token, option);
+            Response.Cookies.Append("token", loginResponse.Token, option);
+            Response.Cookies.Append("username", loginResponse.UserName, option);
 
             return RedirectToAction("Index", "Home");
         }
@@ -49,6 +50,7 @@ public class LoginController : Controller
     public IActionResult Logout()
     {
         Response.Cookies.Delete("token");
+        Response.Cookies.Delete("username");
 
         return RedirectToAction("Index", "Home");
     }

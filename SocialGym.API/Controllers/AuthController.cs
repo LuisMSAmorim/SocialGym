@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
         }
 
         var token = GenerateToken(user);
-        return Ok(new { Token = token, Message = "Success" });
+        return Ok(new { Token = token, Message = "Success", UserName = user.UserName });
     }
 
     private async Task<User> ValidateUser(LoginCredentialsViewModel credentials)

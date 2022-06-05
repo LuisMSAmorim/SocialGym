@@ -1,0 +1,52 @@
+﻿@model SocialGym.BLL.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar @Model.UserName</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Avatar" class="control-label"></label>
+                <input asp-for="Avatar" class="form-control" />
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BenchPressPR" class="control-label"></label>
+                <input asp-for="BenchPressPR" class="form-control" />
+                <span asp-validation-for="BenchPressPR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BackSquatPR" class="control-label"></label>
+                <input asp-for="BackSquatPR" class="form-control" />
+                <span asp-validation-for="BackSquatPR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeadLiftPR" class="control-label"></label>
+                <input asp-for="DeadLiftPR" class="form-control" />
+                <span asp-validation-for="DeadLiftPR" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/profile/@Model.UserName" class="btn btn-primary">Voltar</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
