@@ -20,19 +20,16 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
 
     public async Task AddAsync(User user, Community community)
     {
-        List<CommunityParticipant> admin = new()
+        CommunityParticipant communityParticipant = new()
         {
-            new CommunityParticipant()
-            {
-                CommunityId = community.CommunityId,
-                Community = community,
-                UserId = user.Id,
-                User = user,
-                IsAdmin = true
-            }
+            CommunityId = community.CommunityId,
+            Community = community,
+            UserId = user.Id,
+            User = user,
+            IsAdmin = true
         };
 
-        community.Participants = admin;
+        _context.CommunityParticipant.Add(communityParticipant);
 
         _context.Add(community);
 
@@ -45,6 +42,13 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<CommunityParticipant> GetAdminByCommunityIdAsync(int id)
+    {
+        return await _context.CommunityParticipant
+            .Where(x => x.CommunityId == id)
+            .FirstOrDefaultAsync(x => x.IsAdmin == true);
+    }
+
     public async Task<List<Community>> GetUserCommunitiesAsync(string userId)
     {
         return await _context.CommunityParticipant
@@ -53,17 +57,23 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
             .ToListAsync();
     }
 
+    public async Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id)
+    {
+        return await _context.CommunityParticipant
+            .Where(x => x.CommunityId == id)
+            .Include(x => x.User)
+            .ToListAsync();
+    }
+
     public async Task<Community> GetByIdAsync(int id)
     {
         return await _context.Community
-            .Include(x => x.Participants)
             .FirstOrDefaultAsync(x => x.CommunityId == id);
     }
 
     public async Task<Community> GetByNameAsync(string name)
     {
         return await _context.Community
-            .Include(x => x.Participants)
             .FirstOrDefaultAsync(x => x.Name == name);
     }
 
@@ -95,7 +105,14 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
     public async Task<List<Community>> GetAllAsync()
     {
         return await _context.Community
-            .Include(x => x.Participants)
             .ToListAsync();
+    }
+
+    public async Task<CommunityParticipant> GetParticipantByUserIdAndCommunityId(string userId, int communityId)
+    {
+        return await _context.CommunityParticipant
+            .Where(x => x.UserId == userId)
+            .Where(x => x.CommunityId == communityId)
+            .FirstOrDefaultAsync();
     }
 }

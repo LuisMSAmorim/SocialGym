@@ -39,6 +39,8 @@ public sealed class PostsRepository : IPostsRepository
 
     public async Task<Post> GetByIdAsync(int id)
     {
-        return await _context.Post.FirstOrDefaultAsync(x => x.PostId == id);
+        return await _context.Post
+            .Include(x => x.CommunityParticipant)
+            .FirstOrDefaultAsync(x => x.PostId == id);
     }
 }

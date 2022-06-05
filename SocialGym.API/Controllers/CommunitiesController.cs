@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
+using SocialGym.BLL.Models;
 
 namespace SocialGym.API.Controllers;
 
@@ -50,18 +51,85 @@ public class CommunitiesController : ControllerBase
         return Ok(new { Message = "Community Created Successfully" });
     }
 
+    // POST: api/communities/become_participant/5
+    [HttpPost]
+    [Route("become_participant/{id}")]
+    [Authorize]
+    public async Task<ActionResult> BecomeCommunityParticipant(int id)
+    {
+        var community = await _communitiesRepository.GetByIdAsync(id);
+
+        if(community == null)
+        {
+            return NotFound();
+        }
+
+        var userClaims = User.Claims.FirstOrDefault();
+        var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
+
+        var userAlreadyParticipant = await _communitiesRepository.GetParticipantByUserIdAndCommunityId(user.Id, community.CommunityId);
+
+        if (userAlreadyParticipant != null)
+        {
+            return BadRequest("User already participant");
+        }
+
+        await _communitiesRepository.AddParticipantAsync(user, community);
+
+        return Ok(new { Message = "Participation Registration Successful" });
+    }
+
     // GET: api/communities
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<Community>>> GetStyle()
+    public async Task<ActionResult<IEnumerable<Community>>> GetCommunities()
     {
         return await _communitiesRepository.GetAllAsync();
+    }
+
+    // GET: api/communities/participants/id
+    [HttpGet]
+    [Route("participants/{id}")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<UserProfile>>> GetCommunityParticipants(int id)
+    {
+        var community = await _communitiesRepository.GetByIdAsync(id);
+
+        if (community == null)
+        {
+            return NotFound();
+        }
+
+        var participants = await _communitiesRepository.GetAllParticipantsByCommunityIdAsync(id);
+
+        if(participants == null)
+        {
+            return NotFound();
+        }
+
+        List<UserProfile> participantsProfile = new();
+
+        participants.ForEach(x =>
+        {
+            UserProfile participantProfile = new()
+            {
+                UserName = x.User.UserName,
+                Avatar = x.User.Avatar,
+                BackSquatPR = x.User.BackSquatPR,
+                BenchPressPR = x.User.BenchPressPR,
+                DeadLiftPR = x.User.DeadLiftPR
+            };
+
+            participantsProfile.Add(participantProfile);
+        });
+
+        return participantsProfile;
     }
 
     // GET: api/communities/5
     [HttpGet("{id}")]
     [Authorize]
-    public async Task<ActionResult<Community>> GetStyle(int id)
+    public async Task<ActionResult<Community>> GetCommunity(int id)
     {
         var community = await _communitiesRepository.GetByIdAsync(id);
 
@@ -89,11 +157,9 @@ public class CommunitiesController : ControllerBase
 
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
-        var communityAdmin = community.Participants.
-                                Where(x => x.IsAdmin == true)
-                                .FirstOrDefault();
+        var communityAdmin = await _communitiesRepository.GetAdminByCommunityIdAsync(id);
 
-        if(communityAdmin.UserId != user.Id)
+        if (communityAdmin.UserId != user.Id)
         {
             return Unauthorized();
         }
@@ -106,7 +172,7 @@ public class CommunitiesController : ControllerBase
     // PUT: api/communities/5
     [HttpPut("{id}")]
     [Authorize]
-    public async Task<IActionResult> PutStyle(int id, CommunityDTO communityDTO)
+    public async Task<IActionResult> UpdateCommunity(int id, CommunityDTO communityDTO)
     {
         var community = await _communitiesRepository.GetByIdAsync(id);
 
@@ -119,9 +185,7 @@ public class CommunitiesController : ControllerBase
 
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
-        var communityAdmin = community.Participants.
-                                Where(x => x.IsAdmin == true)
-                                .FirstOrDefault();
+        var communityAdmin = await _communitiesRepository.GetAdminByCommunityIdAsync(id);
 
         if (communityAdmin.UserId != user.Id)
         {

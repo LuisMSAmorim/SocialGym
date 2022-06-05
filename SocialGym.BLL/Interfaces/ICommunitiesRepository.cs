@@ -14,4 +14,7 @@ public interface ICommunitiesRepository
     Task<Community> GetByIdAsync(int id);
     Task<Community> GetByNameAsync(string name);
     Task<List<Community>> GetUserCommunitiesAsync(string userId);
+    Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id);
+    Task<CommunityParticipant> GetParticipantByUserIdAndCommunityId(string userId, int communityId);
+    Task<CommunityParticipant> GetAdminByCommunityIdAsync(int id);
 }

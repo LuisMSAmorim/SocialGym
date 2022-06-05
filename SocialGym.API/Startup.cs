@@ -9,6 +9,7 @@ using SocialGym.BLL.Interfaces;
 using SocialGym.DAL.Context;
 using SocialGym.DAL.Repositories;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SocialGym.API;
 
@@ -22,8 +23,12 @@ public sealed class Startup
     
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
-
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.WriteIndented = true;
+        });
+             
         services.AddEndpointsApiExplorer();
 
         services.AddSwaggerGen();
@@ -74,6 +79,7 @@ public sealed class Startup
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<ICommunitiesRepository, CommunitiesRepository>();
+        services.AddScoped<IPostsRepository, PostsRepository>();
     }
 
     public void ConfigureSwagger(IServiceCollection services)
