@@ -2,7 +2,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="jumbotron">
+  <h1 class="display-4">Bem-vindo(a) a SocialGym!</h1>
+  <p class="lead">Conectando praticantes de musculação.</p>
+  <hr class="my-4">
+  @if (Context.Request.Cookies["token"] == null)
+    {
+        <p>Faça login ou registre-se:</p>
+          <div class="btn-group">
+            <p class="lead">
+                <a style="margin-right: 10px;" class="btn btn-primary btn-lg" asp-controller="Login" asp-action="index" role="button">Login</a>
+            </p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" asp-controller="Registration" asp-action="index" role="button">Registre-se</a>
+            </p>
+        </div>
+    }
 </div>

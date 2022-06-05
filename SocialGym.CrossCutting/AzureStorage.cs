@@ -10,7 +10,7 @@ public sealed class AzureStorage
 
     public AzureStorage()
     {
-        Setup();
+        this.Setup();
     }
 
     public async Task<string> Save(Stream buffer, string fileName)

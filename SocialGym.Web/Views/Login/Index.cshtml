@@ -1,0 +1,34 @@
+﻿@model SocialGym.BLL.ViewModels.LoginCredentialsViewModel;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Login</h1>
+
+@if(ViewBag.Message == "Login ou senha inválidos..."){
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Message
+    </div>
+}
+@if(TempData["registration"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["registration"]
+    </div>
+}
+
+<form asp-action="Index" method="post">
+  <div class="form-group mt-4">
+    <label asp-for="Username">Nome de Usuário</label>
+    <input asp-for="Username" type="text" class="form-control" id="username" placeholder="Nome de usuário" required>
+    <span asp-validation-for="Username" class="text-danger"></span>
+  </div>
+
+  <div class="form-group mt-4">
+    <label asp-for="Password">Senha</label>
+    <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Senha" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-4">Login</button>
+</form>
