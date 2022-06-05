@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using SocialGym.API.Config;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
-using SocialGym.BLL.Models;
+using SocialGym.BLL.ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("Login")]
-    public async Task<IActionResult> Login([FromBody] LoginCredentials credentials)
+    public async Task<IActionResult> Login([FromBody] LoginCredentialsViewModel credentials)
     {
         User user;
 
@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
         return Ok(new { Token = token, Message = "Success" });
     }
 
-    private async Task<User> ValidateUser(LoginCredentials credentials)
+    private async Task<User> ValidateUser(LoginCredentialsViewModel credentials)
     {
         var user = await usersRepository.GetByNameAsync(credentials.Username);
         if (user != null)

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SocialGym.BLL.Interfaces;
-using SocialGym.BLL.Models;
+using SocialGym.BLL.ViewModels;
 
 namespace SocialGym.API.Controllers;
 
@@ -23,7 +23,7 @@ public class ProfilesController : ControllerBase
 
     // GET: api/profiles/string
     [HttpGet("{userName}")]
-    public async Task<ActionResult<UserProfile>> GetProfile(string userName)
+    public async Task<ActionResult<UserProfileViewModel>> GetProfile(string userName)
     {
         var user = await _usersRepository.GetByNameAsync(userName);
 
@@ -32,7 +32,7 @@ public class ProfilesController : ControllerBase
             return NotFound();
         }
 
-        return new UserProfile()
+        return new UserProfileViewModel()
         {
             UserName = user.UserName,
             Avatar = user.Avatar,
@@ -45,7 +45,7 @@ public class ProfilesController : ControllerBase
     // PUT: api/account/string
     [HttpPut("{userName}")]
     [Authorize]
-    public async Task<IActionResult> UpdateAccount(string userName, UserProfile profile)
+    public async Task<IActionResult> UpdateAccount(string userName, UserProfileViewModel profile)
     {
         var user = await _usersRepository.GetByNameAsync(userName);
 

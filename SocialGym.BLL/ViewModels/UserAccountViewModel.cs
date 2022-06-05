@@ -1,6 +1,6 @@
-﻿namespace SocialGym.BLL.Models;
+﻿namespace SocialGym.BLL.ViewModels;
 
-public sealed class UserAccount
+public sealed class UserAccountViewModel
 {
     public string Email { get; set; }
     public string UserName { get; set; }

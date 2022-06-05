@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
-using SocialGym.BLL.Models;
+using SocialGym.BLL.ViewModels;
 using SocialGym.DAL.Context;
 
 namespace SocialGym.DAL.Repositories;
@@ -44,7 +44,7 @@ public sealed class UsersRepository : IUsersRepository
         return await _context.User.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IdentityResult> UpdateProfileAsync(string id, UserProfile profile)
+    public async Task<IdentityResult> UpdateProfileAsync(string id, UserProfileViewModel profile)
     {
         var user = await _context.User.SingleOrDefaultAsync(x => x.Id == id);
 

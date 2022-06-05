@@ -1,8 +1,6 @@
-﻿using SocialGym.BLL.Entities;
+﻿namespace SocialGym.BLL.ViewModels;
 
-namespace SocialGym.BLL.Models;
-
-public sealed class UserProfile
+public sealed class UserProfileViewModel
 {
     public string UserName { get; set; }
     public string Avatar { get; set; }

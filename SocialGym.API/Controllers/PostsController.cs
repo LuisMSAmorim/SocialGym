@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
+using SocialGym.BLL.ViewModels;
 
 namespace SocialGym.API.Controllers;
 
@@ -69,7 +70,7 @@ public class PostsController : ControllerBase
     [HttpGet]
     [Route("communities/{communityId}")]
     [Authorize]
-    public async Task<ActionResult<List<Post>>> GetCommunityPosts(int communityId)
+    public async Task<ActionResult<List<PostViewModel>>> GetCommunityPosts(int communityId)
     {
         var community = await _communitiesRepository.GetByIdAsync(communityId);
 
@@ -89,13 +90,25 @@ public class PostsController : ControllerBase
             return BadRequest("User Isnt Community Participant");
         }
 
-        return await _postsRepository.GetAllByCommunityIdAsync(communityId);
+        var posts = await _postsRepository.GetAllByCommunityIdAsync(communityId);
+
+        return posts
+            .Select(x => new PostViewModel()
+            {
+                CommunityParticipantId = x.CommunityParticipantId,
+                CreatedAt = x.CreatedAt,
+                ImageUrl = x.ImageUrl,
+                PostId = x.PostId,
+                Text = x.Text,
+                Title = x.Title
+            })
+            .ToList();
     }
 
     // GET: api/posts/5
     [HttpGet("{id}")]
     [Authorize]
-    public async Task<ActionResult<Post>> GetCommunityPost(int id)
+    public async Task<ActionResult<PostViewModel>> GetCommunityPost(int id)
     {
         var post = await _postsRepository.GetByIdAsync(id);
 
@@ -122,7 +135,15 @@ public class PostsController : ControllerBase
             return BadRequest("User Isnt Community Participant");
         }
 
-        return post;
+        return new PostViewModel()
+        {
+            CommunityParticipantId = post.CommunityParticipantId,
+            CreatedAt = post.CreatedAt,
+            ImageUrl = post.ImageUrl,
+            PostId = post.PostId,
+            Text = post.Text,
+            Title = post.Title
+        };
     }
 
     // DELETE: api/posts/5

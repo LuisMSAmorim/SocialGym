@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.Interfaces;
-using SocialGym.BLL.Models;
+using SocialGym.BLL.ViewModels;
 
 namespace SocialGym.API.Controllers;
 
@@ -91,7 +91,7 @@ public class CommunitiesController : ControllerBase
     [HttpGet]
     [Route("participants/{id}")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<UserProfile>>> GetCommunityParticipants(int id)
+    public async Task<ActionResult<IEnumerable<UserProfileViewModel>>> GetCommunityParticipants(int id)
     {
         var community = await _communitiesRepository.GetByIdAsync(id);
 
@@ -107,11 +107,11 @@ public class CommunitiesController : ControllerBase
             return NotFound();
         }
 
-        List<UserProfile> participantsProfile = new();
+        List<UserProfileViewModel> participantsProfile = new();
 
         participants.ForEach(x =>
         {
-            UserProfile participantProfile = new()
+            UserProfileViewModel participantProfile = new()
             {
                 UserName = x.User.UserName,
                 Avatar = x.User.Avatar,

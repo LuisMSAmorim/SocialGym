@@ -1,6 +1,6 @@
-﻿namespace SocialGym.BLL.Models;
+﻿namespace SocialGym.BLL.ViewModels;
 
-public sealed class LoginCredentials
+public sealed class LoginCredentialsViewModel
 {
     public string Username { get; set; }
     public string Password { get; set; }

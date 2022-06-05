@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Interfaces;
-using SocialGym.BLL.Models;
+using SocialGym.BLL.ViewModels;
 
 namespace SocialGym.API.Controllers;
 
@@ -50,7 +50,7 @@ public class AccountsController : ControllerBase
     // GET: api/accounts/string
     [HttpGet("{userName}")]
     [Authorize]
-    public async Task<ActionResult<UserAccount>> GetUser(string userName)
+    public async Task<ActionResult<UserAccountViewModel>> GetUser(string userName)
     {
         var user = await _usersRepository.GetByNameAsync(userName);
 
@@ -66,7 +66,7 @@ public class AccountsController : ControllerBase
             return Unauthorized();
         };
 
-        return new UserAccount()
+        return new UserAccountViewModel()
         {
             Email = user.Email,
             UserName = user.UserName,
