@@ -17,7 +17,6 @@ else
     @foreach (var item in Model) {
 
         <div class="card mb-3">
-            <h2 class="card-text">@Html.DisplayFor(modelItem => item.CommunityParticipantUserName)</h2>
             @if(item.ImageUrl != null)
             {
                 <img class="card-img-top" src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="Post image">
@@ -25,7 +24,7 @@ else
             <div class="card-body">
             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
             <p class="card-text">@Html.DisplayFor(modelItem => item.Text)</p>
-            <p class="card-text"><small class="text-muted">Postado em: @Html.DisplayFor(modelItem => item.CreatedAt)</small></p>
+            <p class="card-text"><small class="text-muted">Postado em: @Html.DisplayFor(modelItem => item.CreatedAt), por: @Html.DisplayFor(modelItem => item.CommunityParticipantUserName)</small></p>
             </div>
         </div>
     }    
