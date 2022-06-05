@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialGym.DAL", "SocialGym.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialGym.API", "SocialGym.API\SocialGym.API.csproj", "{7A7C4FB3-1D0C-44ED-B411-2CF4B4C70F89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialGym.CrossCutting", "SocialGym.CrossCutting\SocialGym.CrossCutting.csproj", "{A095FD16-37D6-449C-B6F4-AB9650749E96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialGym.CrossCutting", "SocialGym.CrossCutting\SocialGym.CrossCutting.csproj", "{A095FD16-37D6-449C-B6F4-AB9650749E96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialGym.Web", "SocialGym.Web\SocialGym.Web.csproj", "{C8AAFD90-96AF-4B79-ABF5-7F7955C2F198}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A095FD16-37D6-449C-B6F4-AB9650749E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A095FD16-37D6-449C-B6F4-AB9650749E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A095FD16-37D6-449C-B6F4-AB9650749E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8AAFD90-96AF-4B79-ABF5-7F7955C2F198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8AAFD90-96AF-4B79-ABF5-7F7955C2F198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8AAFD90-96AF-4B79-ABF5-7F7955C2F198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8AAFD90-96AF-4B79-ABF5-7F7955C2F198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
