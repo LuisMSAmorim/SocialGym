@@ -5,8 +5,8 @@ namespace SocialGym.CrossCutting;
 
 public sealed class AzureStorage
 {
-    private BlobServiceClient blobServiceClient { get; set; }
-    private BlobContainerClient containerClient { get; set; }
+    private BlobServiceClient BlobServiceClient { get; set; }
+    private BlobContainerClient ContainerClient { get; set; }
 
     public AzureStorage()
     {
@@ -15,7 +15,7 @@ public sealed class AzureStorage
 
     public async Task<string> Save(Stream buffer, string fileName)
     {
-        BlobClient blobClient = containerClient.GetBlobClient(fileName);
+        BlobClient blobClient = ContainerClient.GetBlobClient(fileName);
 
         await blobClient.UploadAsync(buffer);
 
@@ -26,13 +26,13 @@ public sealed class AzureStorage
     {
         string? connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
 
-        blobServiceClient = new BlobServiceClient(connectionString);
+        BlobServiceClient = new BlobServiceClient(connectionString);
 
         string containerName = "images";
 
-        containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+        ContainerClient = BlobServiceClient.GetBlobContainerClient(containerName);
 
-        if(containerClient == null)
-            containerClient = blobServiceClient.CreateBlobContainer(containerName);
+        if(ContainerClient == null)
+            ContainerClient = BlobServiceClient.CreateBlobContainer(containerName);
     }
 }
