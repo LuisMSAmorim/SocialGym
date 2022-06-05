@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialGym.BLL.ViewModels;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace SocialGym.Web.Controllers;
 
@@ -56,5 +58,54 @@ public class ProfileController : Controller
 
         ViewBag.UserName = profile.UserName;
         return View(profile);
+    }
+
+    // POST: BeersController/Edit/
+    [HttpPost]
+    [Route("/profile/edit/{userName}")]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Edit(IFormCollection collection)
+    {
+        string token = Request.Cookies["token"];
+        string userName = Request.Cookies["username"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        UserProfileViewModel profile = CreateUserProfileViewModel(userName, collection);
+
+        StringContent content = new(JsonConvert.SerializeObject(profile), Encoding.UTF8, "application/json");
+
+        HttpClient httpClient = new();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await httpClient.PutAsync($"{baseUrl}/profiles/{userName}", content);
+
+        if(userName != profile.UserName && response.IsSuccessStatusCode)
+        {
+            Response.Cookies.Delete("token");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index", "Login");
+        }else if (response.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        ViewBag.ErrorMessage = "Ops... Parece que houve um erro";
+        return View(profile);
+    }
+
+    private static UserProfileViewModel CreateUserProfileViewModel(string userName, IFormCollection collection)
+    {
+        return new UserProfileViewModel() {
+            Avatar = collection["Avatar"],
+            UserName = userName,
+            DeadLiftPR = int.Parse(collection["DeadLiftPR"]),
+            BackSquatPR = int.Parse(collection["BackSquatPR"]),
+            BenchPressPR = int.Parse(collection["BenchPressPR"])
+        };
     }
 }

@@ -42,7 +42,7 @@ public class ProfilesController : ControllerBase
         };
     }
 
-    // PUT: api/account/string
+    // PUT: api/profiles/string
     [HttpPut("{userName}")]
     [Authorize]
     public async Task<IActionResult> UpdateAccount(string userName, UserProfileViewModel profile)
