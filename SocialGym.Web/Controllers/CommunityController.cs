@@ -184,40 +184,22 @@ public class CommunityController : Controller
         return View(admin);
     }
 
-    public async Task<IActionResult> Posts(int id)
-    {
-        string token = Request.Cookies["token"];
-
-        if (token == null)
-        {
-            return RedirectToAction("Index", "Login");
-        }
-
-        HttpClient httpClient = new();
-
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/posts/communities/{id}");
-
-        string apiResponse = await response.Content.ReadAsStringAsync();
-
-        var posts = JsonConvert.DeserializeObject<List<PostViewModel>>(apiResponse);
-
-        if (posts == null || posts.Count == 0)
-        {
-            ViewBag.ErrorMessage = "Posts não encontrados";
-            return View();
-        }
-
-        return View(posts);
-    }
-
     private static CommunityDTO CreateCommunityDTOWithFormProps(IFormCollection collection)
     {
         return new CommunityDTO()
         {
             Description = collection["Description"],
             Name = collection["Name"],
+        };
+    }
+
+    private static PostDTO CreatePostDTOWithFormProps(IFormCollection colleciton)
+    {
+        return new PostDTO()
+        {
+            Title = colleciton["Title"],
+            Text = colleciton["Text"],
+            ImageUrl = colleciton["ImageUrl"]
         };
     }
 }

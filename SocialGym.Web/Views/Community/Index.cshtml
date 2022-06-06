@@ -40,7 +40,6 @@ else
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.ActionLink("Visualizar Posts", "Posts", new { id = item.CommunityId },  new { @class="btn btn-primary" }) |
                 @Html.ActionLink("Visualizar Participantes", "Participants", new { id = item.CommunityId  },  new { @class="btn btn-warning" })  |
                 @Html.ActionLink("Visualizar Admin", "Admin", new { id = item.CommunityId  }, new { @class="btn btn-success" }) |
                 @Html.ActionLink("Ingressar", "Ingress", new { id = item.CommunityId },  new { @class="btn btn-info" })

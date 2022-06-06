@@ -9,4 +9,5 @@ public sealed class PostViewModel
     public DateTime CreatedAt { get; set; }
     public string CommunityParticipantUserName { get; set; }
     public string CommunityParticipantAvatar { get; set; }
+    public int CommunityId { get; set; }
 }

@@ -66,7 +66,7 @@ public class PostsController : ControllerBase
         return Ok(new { Message = "Post Created Successfully" });
     }
 
-    // GET: api/posts/5
+    // GET: api/posts/communities/5
     [HttpGet]
     [Route("communities/{communityId}")]
     [Authorize]
