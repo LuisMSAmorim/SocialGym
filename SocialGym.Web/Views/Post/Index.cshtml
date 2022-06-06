@@ -15,7 +15,7 @@ else
     <h1>Comunidade @Model.Community.Name</h1>
 
     <p>
-        <a asp-action="Create">Cria sua nova postagem</a>
+        <a class="btn btn-primary" asp-route-id="@Model.Community.CommunityId" asp-action="Create">Cria sua nova postagem</a>
     </p>
 
     @foreach (var item in Model.Posts) {
@@ -24,7 +24,7 @@ else
             <div class="card-body">
             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
             <p class="card-text">@Html.DisplayFor(modelItem => item.Text)</p>
-            <p class="card-text"><small class="text-muted">Postado em: @Html.DisplayFor(modelItem => item.CreatedAt), por: <a href="/profile/@item.CommunityParticipantUserName">@item.CommunityParticipantUserName)</a></small></p>
+            <p class="card-text"><small class="text-muted">Postado em: @Html.DisplayFor(modelItem => item.CreatedAt), por: <a href="/profile/@item.CommunityParticipantUserName">@item.CommunityParticipantUserName</a></small></p>
             @if(item.ImageUrl != null)
             {
                 <img class="card-img-bottom" src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="Post image">

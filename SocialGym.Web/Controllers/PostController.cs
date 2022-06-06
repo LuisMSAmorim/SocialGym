@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.ViewModels;
 using SocialGym.Web.Models;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace SocialGym.Web.Controllers;
 
@@ -64,5 +66,59 @@ public class PostController : Controller
         };
 
         return View(communityPosts);
+    }
+
+    [Route("/post/create/{communityId}")]
+    public IActionResult Create(int communityId)
+    {
+        string token = Request.Cookies["token"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        ViewBag.CommunityId = communityId;
+        return View();
+    }
+
+    [HttpPost]
+    [Route("/post/create/{communityId}")]
+    public async Task<IActionResult> Create(int communityId, IFormCollection collection)
+    {
+        string token = Request.Cookies["token"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        PostDTO post = CreatePostDTOWithFormProps(collection);
+
+        StringContent content = new(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json");
+
+        HttpClient httpClient = new();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await httpClient.PostAsync($"{baseUrl}/posts/{communityId}", content);
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        JsonConvert.DeserializeObject<CreatedAtActionResult>(apiResponse);
+
+        ViewBag.CommunityId = communityId;
+        ViewBag.SuccessMessage = "Post criado com sucesso";
+        return View();
+    }
+
+    private static PostDTO CreatePostDTOWithFormProps(IFormCollection colleciton)
+    {
+        return new PostDTO()
+        {
+            Title = colleciton["Title"],
+            Text = colleciton["Text"],
+            ImageUrl = colleciton["ImageUrl"]
+        };
     }
 }

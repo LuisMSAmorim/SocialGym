@@ -192,14 +192,4 @@ public class CommunityController : Controller
             Name = collection["Name"],
         };
     }
-
-    private static PostDTO CreatePostDTOWithFormProps(IFormCollection colleciton)
-    {
-        return new PostDTO()
-        {
-            Title = colleciton["Title"],
-            Text = colleciton["Text"],
-            ImageUrl = colleciton["ImageUrl"]
-        };
-    }
 }

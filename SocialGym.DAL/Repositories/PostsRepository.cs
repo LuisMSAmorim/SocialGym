@@ -33,7 +33,8 @@ public sealed class PostsRepository : IPostsRepository
     {
         return await _context.Post
             .Where(x => x.CommunityParticipant.CommunityId == communityId)
-            .Include(x => x.CommunityParticipant.Community)
+            .Include(x => x.CommunityParticipant)
+            .Include(x => x.CommunityParticipant.User)
             .ToListAsync();
     }
 
