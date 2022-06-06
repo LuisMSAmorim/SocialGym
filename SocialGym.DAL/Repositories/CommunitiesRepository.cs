@@ -50,10 +50,10 @@ public sealed class CommunitiesRepository : ICommunitiesRepository
             .FirstOrDefaultAsync(x => x.IsAdmin == true);
     }
 
-    public async Task<List<Community>> GetUserCommunitiesAsync(string userId)
+    public async Task<List<Community>> GetUserCommunitiesAsync(string userName)
     {
         return await _context.CommunityParticipant
-            .Where(x => x.UserId == userId)
+            .Where(x => x.User.UserName == userName)
             .Select(x => x.Community)
             .ToListAsync();
     }

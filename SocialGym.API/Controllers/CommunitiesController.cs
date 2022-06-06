@@ -87,6 +87,15 @@ public class CommunitiesController : ControllerBase
         return await _communitiesRepository.GetAllAsync();
     }
 
+    // GET: api/communities/user/id
+    [HttpGet]
+    [Route("user/{userName}")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<Community>>> GetUserCommunities(string userName)
+    {
+        return await _communitiesRepository.GetUserCommunitiesAsync(userName);
+    }
+
     // GET: api/communities/participants/id
     [HttpGet]
     [Route("participants/{id}")]

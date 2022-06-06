@@ -122,6 +122,12 @@ public class CommunityController : Controller
 
         HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/{id}");
 
+        if(response.IsSuccessStatusCode == false)
+        {
+            ViewBag.ErrorMessage = "Ops, parece que você já é participante desta comunidade";
+            return View();
+        }
+
         string apiResponse = await response.Content.ReadAsStringAsync();
 
         var community = JsonConvert.DeserializeObject<Community>(apiResponse);
@@ -176,6 +182,34 @@ public class CommunityController : Controller
         var admin = JsonConvert.DeserializeObject<UserProfileViewModel>(apiResponse);
 
         if (admin == null )
+        {
+            ViewBag.ErrorMessage = "Admin não encontrado";
+            return View();
+        }
+
+        return View(admin);
+    }
+    
+    public async Task<IActionResult> UserCommunities(int id)
+    {
+        string token = Request.Cookies["token"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        HttpClient httpClient = new();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/admin/{id}");
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        var admin = JsonConvert.DeserializeObject<UserProfileViewModel>(apiResponse);
+
+        if (admin == null)
         {
             ViewBag.ErrorMessage = "Admin não encontrado";
             return View();

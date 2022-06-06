@@ -13,7 +13,7 @@ public interface ICommunitiesRepository
     Task UpdateAsync(int id, CommunityDTO community);
     Task<Community> GetByIdAsync(int id);
     Task<Community> GetByNameAsync(string name);
-    Task<List<Community>> GetUserCommunitiesAsync(string userId);
+    Task<List<Community>> GetUserCommunitiesAsync(string userName);
     Task<List<CommunityParticipant>> GetAllParticipantsByCommunityIdAsync(int id);
     Task<CommunityParticipant> GetParticipantByUserIdAndCommunityId(string userId, int communityId);
     Task<CommunityParticipant> GetAdminByCommunityIdAsync(int id);
