@@ -190,7 +190,8 @@ public class CommunityController : Controller
         return View(admin);
     }
     
-    public async Task<IActionResult> UserCommunities(int id)
+    [HttpGet("{userName}")]
+    public async Task<IActionResult> UserCommunities(string userName)
     {
         string token = Request.Cookies["token"];
 
@@ -203,19 +204,19 @@ public class CommunityController : Controller
 
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/admin/{id}");
+        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/user/{userName}");
 
         string apiResponse = await response.Content.ReadAsStringAsync();
 
-        var admin = JsonConvert.DeserializeObject<UserProfileViewModel>(apiResponse);
+        var userCommunities = JsonConvert.DeserializeObject<List<Community>>(apiResponse);
 
-        if (admin == null)
+        if (userCommunities == null || userCommunities.Count == 0)
         {
-            ViewBag.ErrorMessage = "Admin não encontrado";
+            ViewBag.ErrorMessage = "Comunidades não encontradas";
             return View();
         }
 
-        return View(admin);
+        return View(userCommunities);
     }
 
     private static CommunityDTO CreateCommunityDTOWithFormProps(IFormCollection collection)
