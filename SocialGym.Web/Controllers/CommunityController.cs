@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.ViewModels;
+using SocialGym.Web.Models;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -122,12 +123,6 @@ public class CommunityController : Controller
 
         HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/{id}");
 
-        if(response.IsSuccessStatusCode == false)
-        {
-            ViewBag.ErrorMessage = "Ops, parece que você já é participante desta comunidade";
-            return View();
-        }
-
         string apiResponse = await response.Content.ReadAsStringAsync();
 
         var community = JsonConvert.DeserializeObject<Community>(apiResponse);
@@ -157,7 +152,13 @@ public class CommunityController : Controller
 
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        await httpClient.PostAsync($"{baseUrl}/communities/become_participant/{communityId}", null);
+        var response = await httpClient.PostAsync($"{baseUrl}/communities/become_participant/{communityId}", null);
+
+        if (response.IsSuccessStatusCode == false)
+        {
+            ViewBag.ErrorMessage = "Ops, parece que você já é participante desta comunidade";
+            return View();
+        }
 
         return RedirectToAction("Index");
     }
@@ -190,7 +191,8 @@ public class CommunityController : Controller
         return View(admin);
     }
     
-    [HttpGet("{userName}")]
+    [HttpGet]
+    [Route("/Community/user/{userName}")]
     public async Task<IActionResult> UserCommunities(string userName)
     {
         string token = Request.Cookies["token"];
@@ -204,11 +206,25 @@ public class CommunityController : Controller
 
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/communities/user/{userName}");
+        var response = await Task.WhenAll(
+            httpClient.GetAsync($"{baseUrl}/communities/user/{userName}"),
+            httpClient.GetAsync($"{baseUrl}/profiles/{userName}")
+        );
 
-        string apiResponse = await response.Content.ReadAsStringAsync();
+        var communitiesResponse = response[0];
+        var userProfileResponse = response[1];
 
-        var userCommunities = JsonConvert.DeserializeObject<List<Community>>(apiResponse);
+        if(userProfileResponse.IsSuccessStatusCode == false)
+        {
+            ViewBag.ErrorMessage = "Usuário não encontrado";
+            return View();
+        }
+
+        string communitiesApiResponse = await communitiesResponse.Content.ReadAsStringAsync();
+        string userProfileApiResponse = await userProfileResponse.Content.ReadAsStringAsync();
+
+        var userCommunities = JsonConvert.DeserializeObject<List<Community>>(communitiesApiResponse);
+        var userProfile = JsonConvert.DeserializeObject<UserProfileViewModel>(userProfileApiResponse);
 
         if (userCommunities == null || userCommunities.Count == 0)
         {
@@ -216,7 +232,13 @@ public class CommunityController : Controller
             return View();
         }
 
-        return View(userCommunities);
+        UserProfileCommunitiesViewModel userProfileCommunities = new()
+        {
+            Communities = userCommunities,
+            UserProfile = userProfile
+        };
+
+        return View(userProfileCommunities);
     }
 
     private static CommunityDTO CreateCommunityDTOWithFormProps(IFormCollection collection)

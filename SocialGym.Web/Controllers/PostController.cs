@@ -38,7 +38,7 @@ public class PostController : Controller
 
         if (postsResponse.IsSuccessStatusCode == false)
         {
-            ViewBag.ErrorMessage = "Oops, algo deu errado... Ingresse nesta comunidade e tente novamente!";
+            ViewBag.NonParticipantMessage = "Oops, algo deu errado... Ingresse nesta comunidade e tente novamente!";
             return View();
         }
 
@@ -48,7 +48,13 @@ public class PostController : Controller
         var community = JsonConvert.DeserializeObject<Community>(communityApiResponse);
         var posts = JsonConvert.DeserializeObject<List<PostViewModel>>(postsApiResponse);
 
-        if(community == null)
+        CommunityPostsViewModel communityPosts = new()
+        {
+            Community = community,
+            Posts = posts
+        };
+
+        if (community == null)
         {
             ViewBag.ErrorMessage = "Comunidade não encontrada";
             return View();
@@ -56,14 +62,8 @@ public class PostController : Controller
         if (posts == null || posts.Count == 0)
         {
             ViewBag.ErrorMessage = "Posts não encontrados";
-            return View();
+            return View(communityPosts);
         }
-
-        CommunityPostsViewModel communityPosts = new()
-        {
-            Community = community,
-            Posts = posts
-        };
 
         return View(communityPosts);
     }

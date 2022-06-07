@@ -1,14 +1,8 @@
-﻿@model IEnumerable<SocialGym.BLL.Entities.Community>
+﻿@model SocialGym.Web.Models.UserProfileCommunitiesViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "UserCommunities";
 }
-
-<h1>Comunidades</h1>
-
-<p>
-    <a class="btn btn-primary mt-2" asp-action="Create">Criar uma comunidade</a>
-</p>
 
 @if(ViewBag.ErrorMessage != null)
 {
@@ -18,20 +12,27 @@
 }
 else
 {
+    <div class="row marcador align-items-center">
+        <div class="col mx-auto text-center">
+            <img style="width: 10rem; height: 10rem; border-radius: 50%;" class="card-img-top" src="@Model.UserProfile.Avatar" alt="@ViewBag.UserName" >
+             <h1 style="font-size: 4rem;">@Model.UserProfile.UserName</h1>
+        </div>
+    </div>
+
     <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Communities.ElementAt(0).Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Communities.ElementAt(0).Description)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Communities) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

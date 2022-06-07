@@ -18,11 +18,17 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1">   
                         @if(Context.Request.Cookies["token"] != null)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="/profile/@Context.Request.Cookies["username"]">Meu Perfil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Community/user/@Context.Request.Cookies["username"]">Minhas Comunidades</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/login/logout">Logout</a>
                             </li>
                         }
                     </ul>
