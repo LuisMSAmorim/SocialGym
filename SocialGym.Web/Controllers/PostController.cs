@@ -112,6 +112,71 @@ public class PostController : Controller
         return View();
     }
 
+    [HttpGet]
+    [Route("/post/delete/{postId}")]
+    public async Task<IActionResult> Delete(int postId)
+    {
+        string token = Request.Cookies["token"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        HttpClient httpClient = new();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await httpClient.GetAsync($"{baseUrl}/posts/{postId}");
+
+        if (response.IsSuccessStatusCode == false)
+        {
+            ViewBag.NonParticipantMessage = "Oops, algo deu errado... Ingresse nesta comunidade e tente novamente!";
+            return View();
+        }
+
+        string apiResponse = await response.Content.ReadAsStringAsync();
+
+        var post = JsonConvert.DeserializeObject<PostViewModel>(apiResponse);
+
+        if (post == null)
+        {
+            ViewBag.ErrorMessage = "Post não encontrado";
+            return View();
+        }
+
+        return View();
+    }
+
+    [HttpPost]
+    [Route("/post/delete/{postId}")]
+    public async Task<IActionResult> Delete(int postId, IFormCollection collection)
+    {
+        string token = Request.Cookies["token"];
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
+        HttpClient httpClient = new();
+
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        HttpResponseMessage response = await httpClient.DeleteAsync($"{baseUrl}/posts/{postId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            ViewBag.SuccessMessage = "Post deletado com sucesso";
+            return View();
+        }
+
+        PostDTO post = CreatePostDTOWithFormProps(collection);
+
+        ViewBag.ErrorMessage = "Oops, parece que você não é autor do post ou administrador da comunidade...";
+        return View(post);
+    }
+
     private static PostDTO CreatePostDTOWithFormProps(IFormCollection colleciton)
     {
         return new PostDTO()

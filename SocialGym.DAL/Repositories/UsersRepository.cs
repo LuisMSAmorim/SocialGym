@@ -25,7 +25,7 @@ public sealed class UsersRepository : IUsersRepository
 
     public async Task<IdentityResult> AddAsync(UserDTO userDTO)
     {
-        User user = new() { UserName = userDTO.UserName, Email = userDTO.Email };
+        User user = new() { UserName = userDTO.UserName };
         return await _userManager.CreateAsync(user, userDTO.Password);
     }
 

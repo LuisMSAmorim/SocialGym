@@ -42,6 +42,7 @@ public sealed class PostsRepository : IPostsRepository
     {
         return await _context.Post
             .Include(x => x.CommunityParticipant)
+            .Include(x => x.CommunityParticipant.User)
             .FirstOrDefaultAsync(x => x.PostId == id);
     }
 }
