@@ -140,6 +140,7 @@ public class PostsController : ControllerBase
         {
             CommunityParticipantUserName = post.CommunityParticipant.User.UserName,
             CommunityParticipantAvatar = post.CommunityParticipant.User.Avatar,
+            CommunityId = post.CommunityParticipant.CommunityId,
             CreatedAt = post.CreatedAt,
             ImageUrl = post.ImageUrl,
             PostId = post.PostId,

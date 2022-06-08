@@ -131,7 +131,7 @@ public class PostController : Controller
 
         if (response.IsSuccessStatusCode == false)
         {
-            ViewBag.NonParticipantMessage = "Oops, algo deu errado... Ingresse nesta comunidade e tente novamente!";
+            ViewBag.ErrorMessage = "Oops, algo deu errado... Ingresse nesta comunidade e tente novamente!";
             return View();
         }
 
@@ -145,7 +145,7 @@ public class PostController : Controller
             return View();
         }
 
-        return View();
+        return View(post);
     }
 
     [HttpPost]
@@ -171,10 +171,8 @@ public class PostController : Controller
             return View();
         }
 
-        PostDTO post = CreatePostDTOWithFormProps(collection);
-
         ViewBag.ErrorMessage = "Oops, parece que você não é autor do post ou administrador da comunidade...";
-        return View(post);
+        return View();
     }
 
     private static PostDTO CreatePostDTOWithFormProps(IFormCollection colleciton)

@@ -36,6 +36,7 @@ else
             
         <div class="card mb-3">
             <div class="card-body">
+            <a href="/post/delete/@item.PostId" class="btn btn-sm btn-danger float-right">Deletar</a>
             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
             <p class="card-text">@Html.DisplayFor(modelItem => item.Text)</p>
             <p class="card-text"><small class="text-muted">Postado em: @Html.DisplayFor(modelItem => item.CreatedAt), por: <a href="/profile/@item.CommunityParticipantUserName">@item.CommunityParticipantUserName</a></small></p>
@@ -45,6 +46,6 @@ else
             }
             </div>
         </div>
-    }    
+        }    
     }
 }

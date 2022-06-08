@@ -1,4 +1,4 @@
-﻿@model SocialGym.BLL.Entities.Post
+﻿@model SocialGym.BLL.ViewModels.PostViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -13,13 +13,13 @@
 else if(ViewBag.SuccessMessage != null)
 {
     <div class="alert alert-success" role="alert">
-        @ViewBag.ErrorMessage
+        @ViewBag.SuccessMessage
     </div>
 }
+else
 {
     <h3>Você deseja deletar este post?</h3>
     <div>
-        <h4>Post</h4>
         <hr />
         <dl class="row">
             <dt class = "col-sm-2">
@@ -34,17 +34,26 @@ else if(ViewBag.SuccessMessage != null)
             <dd class = "col-sm-10">
                 @Html.DisplayFor(model => model.Text)
             </dd>
+            @if(Model.ImageUrl != null)
+            {
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.ImageUrl)
+                </dt>
+                <dd class = "col-sm-10">
+                    <img src="@Model.ImageUrl" />
+                </dd>
+            }
             <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.ImageUrl)
+                Autor:
             </dt>
             <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.ImageUrl)
+                @Html.DisplayFor(model => model.CommunityParticipantUserName)
             </dd>
         </dl>
     
         <form asp-action="Delete">
-            <button type="submit" value="Delete" class="btn btn-danger">Deletar</button>/> |
-            <a class="btn btn-primary" asp-action="Index">Voltar</a>
+            <button type="submit" value="Delete" class="btn btn-danger">Deletar</button> |
+            <a class="btn btn-primary" href="/posts/@Model.CommunityId">Voltar</a>
         </form>
     </div>   
 }
