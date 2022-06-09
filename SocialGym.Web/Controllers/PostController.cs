@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SocialGym.BLL.DTOs;
 using SocialGym.BLL.Entities;
 using SocialGym.BLL.ViewModels;
+using SocialGym.CrossCutting;
 using SocialGym.Web.Models;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,7 +12,16 @@ namespace SocialGym.Web.Controllers;
 
 public class PostController : Controller
 {
+    private AzureStorage AzureStorage { get; set; }
     private readonly string baseUrl = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("Urls")["ApiUrl"];
+
+    public PostController
+    (
+        AzureStorage AzureStorage
+    )
+    {
+        this.AzureStorage = AzureStorage;
+    }
 
     // GET: post/communityId
     [Route("/posts/{communityId}")]
@@ -84,7 +94,7 @@ public class PostController : Controller
 
     [HttpPost]
     [Route("/post/create/{communityId}")]
-    public async Task<IActionResult> Create(int communityId, IFormCollection collection)
+    public async Task<IActionResult> Create(int communityId, IFormCollection collection, IFormFile ImageUrl)
     {
         string token = Request.Cookies["token"];
 
@@ -93,7 +103,21 @@ public class PostController : Controller
             return RedirectToAction("Index", "Login");
         }
 
+        MemoryStream memoryStream = new();
+
+        using (var fileUpload = ImageUrl.OpenReadStream())
+        {
+            await fileUpload.CopyToAsync(memoryStream);
+            fileUpload.Close();
+        }
+        
+        memoryStream.Position = 0;
+
+        string imageUrl = await AzureStorage.Save(memoryStream, "image" + Guid.NewGuid().ToString() + ".jpg");
+
         PostDTO post = CreatePostDTOWithFormProps(collection);
+
+        post.ImageUrl = imageUrl;
 
         StringContent content = new(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json");
 

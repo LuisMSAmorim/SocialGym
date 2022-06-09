@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocialGym.BLL\SocialGym.BLL.csproj" />
+    <ProjectReference Include="..\SocialGym.CrossCutting\SocialGym.CrossCutting.csproj" />
   </ItemGroup>
 
 </Project>

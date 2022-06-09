@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SocialGym.BLL.ViewModels;
+using SocialGym.CrossCutting;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -8,8 +9,16 @@ namespace SocialGym.Web.Controllers;
 
 public class ProfileController : Controller
 {
-
+    private AzureStorage AzureStorage { get; set; }
     private readonly string baseUrl = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("Urls")["ApiUrl"];
+
+    public ProfileController
+(
+    AzureStorage AzureStorage
+)
+    {
+        this.AzureStorage = AzureStorage;
+    }
 
     [Route("/profile/{userName}")]
     public async Task<IActionResult> Index(string userName)
@@ -64,7 +73,7 @@ public class ProfileController : Controller
     [HttpPost]
     [Route("/profile/edit/{userName}")]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(IFormCollection collection)
+    public async Task<ActionResult> Edit(IFormCollection collection, IFormFile Avatar)
     {
         string token = Request.Cookies["token"];
         string userName = Request.Cookies["username"];
@@ -74,7 +83,21 @@ public class ProfileController : Controller
             return RedirectToAction("Index", "Login");
         }
 
+        MemoryStream memoryStream = new();
+
+        using (var fileUpload = Avatar.OpenReadStream())
+        {
+            await fileUpload.CopyToAsync(memoryStream);
+            fileUpload.Close();
+        }
+
+        memoryStream.Position = 0;
+
+        string imageUrl = await AzureStorage.Save(memoryStream, "image" + Guid.NewGuid().ToString() + ".jpg");
+
         UserProfileViewModel profile = CreateUserProfileViewModel(userName, collection);
+
+        profile.Avatar = imageUrl;
 
         StringContent content = new(JsonConvert.SerializeObject(profile), Encoding.UTF8, "application/json");
 
@@ -84,12 +107,8 @@ public class ProfileController : Controller
 
         var response = await httpClient.PutAsync($"{baseUrl}/profiles/{userName}", content);
 
-        if(userName != profile.UserName && response.IsSuccessStatusCode)
-        {
-            Response.Cookies.Delete("token");
-            Response.Cookies.Delete("username");
-            return RedirectToAction("Index", "Login");
-        }else if (response.IsSuccessStatusCode)
+
+        if (response.IsSuccessStatusCode)
         {
             return RedirectToAction("Index", "Home");
         }
@@ -101,7 +120,6 @@ public class ProfileController : Controller
     private static UserProfileViewModel CreateUserProfileViewModel(string userName, IFormCollection collection)
     {
         return new UserProfileViewModel() {
-            Avatar = collection["Avatar"],
             UserName = userName,
             DeadLiftPR = int.Parse(collection["DeadLiftPR"]),
             BackSquatPR = int.Parse(collection["BackSquatPR"]),

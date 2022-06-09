@@ -1,6 +1,10 @@
+using SocialGym.CrossCutting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<AzureStorage>();
 
 var app = builder.Build();
 
