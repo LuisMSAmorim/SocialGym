@@ -97,23 +97,27 @@ public class PostController : Controller
     public async Task<IActionResult> Create(int communityId, IFormCollection collection, IFormFile ImageUrl)
     {
         string token = Request.Cookies["token"];
+        string imageUrl = "";
 
         if (token == null)
         {
             return RedirectToAction("Index", "Login");
         }
 
-        MemoryStream memoryStream = new();
-
-        using (var fileUpload = ImageUrl.OpenReadStream())
+        if(ImageUrl != null)
         {
-            await fileUpload.CopyToAsync(memoryStream);
-            fileUpload.Close();
-        }
-        
-        memoryStream.Position = 0;
+            MemoryStream memoryStream = new();
 
-        string imageUrl = await AzureStorage.Save(memoryStream, "image" + Guid.NewGuid().ToString() + ".jpg");
+            using (var fileUpload = ImageUrl.OpenReadStream())
+            {
+                await fileUpload.CopyToAsync(memoryStream);
+                fileUpload.Close();
+            }
+
+            memoryStream.Position = 0;
+
+            imageUrl = await AzureStorage.Save(memoryStream, "image" + Guid.NewGuid().ToString() + ".jpg");
+        }
 
         PostDTO post = CreatePostDTOWithFormProps(collection);
 
