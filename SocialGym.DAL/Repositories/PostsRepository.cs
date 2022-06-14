@@ -35,6 +35,7 @@ public sealed class PostsRepository : IPostsRepository
             .Where(x => x.CommunityParticipant.CommunityId == communityId)
             .Include(x => x.CommunityParticipant)
             .Include(x => x.CommunityParticipant.User)
+            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 
