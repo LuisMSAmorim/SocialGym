@@ -13,9 +13,9 @@ public class ProfileController : Controller
     private readonly string baseUrl = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("Urls")["ApiUrl"];
 
     public ProfileController
-(
-    AzureStorage AzureStorage
-)
+    (
+        AzureStorage AzureStorage
+    )
     {
         this.AzureStorage = AzureStorage;
     }

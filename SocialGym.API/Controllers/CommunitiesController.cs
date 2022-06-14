@@ -37,7 +37,6 @@ public class CommunitiesController : ControllerBase
         }
 
         var userClaims = User.Claims.FirstOrDefault();
-
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
         Community community = new()
@@ -116,14 +115,15 @@ public class CommunitiesController : ControllerBase
             return NotFound();
         }
 
-        return participants.Select(x => new UserProfileViewModel()
-        {
-            UserName = x.User.UserName,
-            Avatar = x.User.Avatar,
-            BackSquatPR = x.User.BackSquatPR,
-            BenchPressPR = x.User.BenchPressPR,
-            DeadLiftPR = x.User.DeadLiftPR
-        }).ToList();
+        return participants
+            .Select(x => new UserProfileViewModel()
+            {
+                UserName = x.User.UserName,
+                Avatar = x.User.Avatar,
+                BackSquatPR = x.User.BackSquatPR,
+                BenchPressPR = x.User.BenchPressPR,
+                DeadLiftPR = x.User.DeadLiftPR
+            }).ToList();
     }
 
     // GET: api/communities/admin/id
@@ -207,7 +207,6 @@ public class CommunitiesController : ControllerBase
         }
 
         var userClaims = User.Claims.FirstOrDefault();
-
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
         var communityAdmin = await _communitiesRepository.GetAdminByCommunityIdAsync(id);

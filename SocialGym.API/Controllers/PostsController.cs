@@ -25,7 +25,6 @@ public class PostsController : ControllerBase
         _postsRepository = postsRepository;
         _communitiesRepository = communitiesRepository;
         _usersRepository = usersRepository;
-
     }
 
     // POST: api/posts/5
@@ -41,7 +40,6 @@ public class PostsController : ControllerBase
         }
 
         var userClaims = User.Claims.FirstOrDefault();
-
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
         var communityParticipant = await _communitiesRepository.GetParticipantByUserIdAndCommunityId(user.Id, community.CommunityId);
@@ -80,7 +78,6 @@ public class PostsController : ControllerBase
         }
 
         var userClaims = User.Claims.FirstOrDefault();
-
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
         var communityParticipant = await _communitiesRepository.GetParticipantByUserIdAndCommunityId(user.Id, community.CommunityId);
@@ -174,7 +171,6 @@ public class PostsController : ControllerBase
         var adminId = admin.UserId;
 
         var userClaims = User.Claims.FirstOrDefault();
-
         var user = await _usersRepository.GetByNameAsync(userClaims.Subject.Name);
 
         if (postAuthorId != user.Id && adminId != user.Id)

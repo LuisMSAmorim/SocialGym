@@ -208,8 +208,7 @@ public class CommunityController : Controller
 
         var response = await Task.WhenAll(
             httpClient.GetAsync($"{baseUrl}/communities/user/{userName}"),
-            httpClient.GetAsync($"{baseUrl}/profiles/{userName}")
-        );
+            httpClient.GetAsync($"{baseUrl}/profiles/{userName}"));
 
         var communitiesResponse = response[0];
         var userProfileResponse = response[1];
@@ -220,8 +219,12 @@ public class CommunityController : Controller
             return View();
         }
 
-        string communitiesApiResponse = await communitiesResponse.Content.ReadAsStringAsync();
-        string userProfileApiResponse = await userProfileResponse.Content.ReadAsStringAsync();
+        var apiResponse = await Task.WhenAll(
+            communitiesResponse.Content.ReadAsStringAsync(),
+            userProfileResponse.Content.ReadAsStringAsync());
+
+        string communitiesApiResponse = apiResponse[0];
+        string userProfileApiResponse = apiResponse[1];
 
         var userCommunities = JsonConvert.DeserializeObject<List<Community>>(communitiesApiResponse);
         var userProfile = JsonConvert.DeserializeObject<UserProfileViewModel>(userProfileApiResponse);
